@@ -27,14 +27,19 @@ function renderFleet() {
   const el = document.getElementById('fleet-list');
   if (!el) return;
   el.innerHTML = STATE.fleet.map(a => {
-    if (a.locked) return `
+    if (a.locked) {
+      const typeKey = a.name.includes('787') ? '787-9' : a.name.includes('777') ? '777-300ER' : 'unknown';
+      const prices = { '787-9': '$325M', '777-300ER': '$290M' };
+      const canBuy = isAuthenticated;
+      return `
       <div class="card fleet-card locked">
         <div>
           <div class="card-title">${a.name}</div>
           <div class="card-sub">${a.type} · ${a.seats} seats · ${a.unlock_requirement || 'locked'}</div>
+          ${canBuy ? `<button class="purchase-btn" onclick="openPurchaseModal({id:'${a.id}',name:'${a.name}',registration:'${a.registration}',type_key:'${typeKey}'})">Purchase — ${prices[typeKey] || 'price on request'}</button>` : ''}
         </div>
         <span class="badge badge-muted"><i class="ti ti-lock"></i> Locked</span>
-      </div>`;
+      </div>`;};
     const maxHours = { 'GA': 100, 'Regional': 200, 'Narrowbody': 300, 'Widebody': 250 }[a.type] || 200;
     const pct = Math.min(100, Math.round((a.hours_logged / maxHours) * 100));
     const mstClass = a.maintenance_status === 'Airworthy' ? 'badge-success' : a.maintenance_status === 'Watch' ? 'badge-warning' : 'badge-danger';
