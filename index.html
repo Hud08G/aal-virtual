@@ -27,58 +27,43 @@
 }
 html{background:var(--bg);color:var(--text);font-family:var(--sans)}
 body{min-height:100vh}
-
 .site-wrap{max-width:860px;margin:0 auto;padding:1.5rem 1rem 4rem}
-
-/* Header */
-.site-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:1.25rem;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border)}
+.site-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:1.25rem;margin-bottom:1.5rem;border-bottom:.5px solid var(--border)}
 .logo-group{display:flex;align-items:center;gap:12px}
 .logo-mark{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;letter-spacing:.5px}
 .logo-title{font-size:16px;font-weight:600;color:var(--text);letter-spacing:.3px}
 .logo-sub{font-size:11px;color:var(--text2);margin-top:2px}
 .header-meta{font-size:11px;color:var(--text3);text-align:right;line-height:1.6}
-.auth-btn{font-size:11px;color:var(--text3);background:transparent;border:.5px solid var(--border2);border-radius:var(--radius);padding:4px 10px;cursor:pointer;margin-top:4px}
-.auth-btn:hover{color:var(--text);border-color:var(--border2)}
+.auth-btn{font-size:11px;color:var(--text3);background:transparent;border:.5px solid var(--border2);border-radius:var(--radius);padding:4px 10px;cursor:pointer;margin-top:4px;font-family:var(--sans)}
+.auth-btn:hover{color:var(--text)}
 .auth-btn.active{color:var(--red-text);border-color:var(--red)}
-
-/* Metrics */
 .metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:1.5rem}
 .metric{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px}
 .metric-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
 .metric-value{font-size:20px;font-weight:600;color:var(--text)}
 .metric-value.green{color:var(--green-text)}
 .metric-value.red{color:var(--red-text)}
-
-/* Nav */
 .nav{display:flex;gap:4px;margin-bottom:1.25rem;flex-wrap:wrap}
 .nav-btn{padding:5px 12px;border-radius:var(--radius);border:.5px solid var(--border);background:transparent;font-size:12px;color:var(--text2);cursor:pointer;font-family:var(--sans);transition:all .12s}
 .nav-btn:hover{background:var(--surface2);color:var(--text)}
 .nav-btn.active{background:var(--red);color:#fff;border-color:var(--red);font-weight:500}
 .nav-btn.ops-only{display:none}
 .nav-btn.ops-only.visible{display:inline-block}
-
-/* Panels */
 .panel{display:none}.panel.active{display:block}
 .panel-title{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
-
-/* Cards */
 .card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:13px 15px;margin-bottom:7px}
 .card-title{font-size:13px;font-weight:500;color:var(--text)}
 .card-sub{font-size:11px;color:var(--text2);margin-top:2px}
-
-/* Fleet */
 .fleet-card{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.fleet-card.locked{opacity:.35}
+.fleet-card.locked{opacity:.5;border-style:dashed}
 .progress-bar{background:var(--surface3);border-radius:3px;height:3px;margin-top:6px;width:120px}
 .progress-fill{height:3px;border-radius:3px;background:var(--red)}
-
-/* Routes */
+.purchase-btn{font-size:11px;padding:4px 10px;border-radius:var(--radius);border:.5px solid var(--green-text);color:var(--green-text);background:transparent;cursor:pointer;font-family:var(--sans);margin-top:6px;display:block}
+.purchase-btn:hover{background:var(--green-bg)}
 .route-card{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .route-airports{font-size:14px;font-weight:500;color:var(--text);letter-spacing:.5px;font-family:var(--mono)}
 .revenue{font-size:12px;font-weight:500;color:var(--green-text)}
 .section-label{font-size:11px;color:var(--text3);margin:12px 0 6px;padding-left:2px}
-
-/* Finances */
 .finance-card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.1rem}
 .finance-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:.5px solid var(--border);font-size:13px}
 .finance-row:last-child{border-bottom:none}
@@ -86,20 +71,9 @@ body{min-height:100vh}
 .finance-label{color:var(--text2)}
 .finance-value.pos{color:var(--green-text);font-weight:500}
 .finance-value.neg{color:var(--red-text);font-weight:500}
-
-/* Staff */
 .staff-card{display:flex;align-items:center;gap:11px}
 .pilot-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
 .pilot-earn{margin-left:auto;font-size:12px;font-weight:500;color:var(--green-text);white-space:nowrap}
-
-/* Color themes for avatars */
-.av-info{background:var(--blue-bg);color:var(--blue-text)}
-.av-success{background:var(--green-bg);color:var(--green-text)}
-.av-warning{background:var(--warn-bg);color:var(--warn-text)}
-.av-danger{background:var(--red-bg);color:var(--red-text)}
-.av-secondary{background:var(--surface3);color:var(--text2)}
-
-/* Log */
 .log-entry{display:flex;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border);align-items:flex-start}
 .log-entry:last-child{border-bottom:none}
 .log-date{font-size:10px;color:var(--text3);min-width:48px;padding-top:2px;font-family:var(--mono)}
@@ -109,15 +83,11 @@ body{min-height:100vh}
 .log-ok{background:var(--green-bg);color:var(--green-text)}
 .log-inc{background:var(--warn-bg);color:var(--warn-text)}
 .log-div{background:var(--red-bg);color:var(--red-text)}
-
-/* Badges */
 .badge{font-size:10px;padding:2px 8px;border-radius:var(--radius);font-weight:500;white-space:nowrap;flex-shrink:0}
 .badge-success{background:var(--green-bg);color:var(--green-text)}
 .badge-warning{background:var(--warn-bg);color:var(--warn-text)}
 .badge-danger{background:var(--red-bg);color:var(--red-text)}
 .badge-muted{background:var(--surface3);color:var(--text3)}
-
-/* Dispatch */
 .dispatch-wrap{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem}
 .hint{font-size:11px;color:var(--text2);margin-bottom:12px;line-height:1.6}
 label{font-size:11px;color:var(--text2);display:block;margin-bottom:4px}
@@ -127,24 +97,18 @@ textarea{resize:vertical;font-family:var(--mono);line-height:1.6}
 .field-group{margin-bottom:10px}
 .field-row{display:flex;gap:8px;margin-bottom:10px}
 .field-row>div{flex:1;min-width:0}
-
-/* OFP card */
 .ofp-card{display:none;grid-template-columns:1fr 1fr;margin:12px 0;border:.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
 .ofp-section-header{grid-column:1/-1;font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:6px 12px;background:var(--surface3);border-bottom:.5px solid var(--border)}
 .ofp-label{font-size:11px;color:var(--text2);padding:6px 12px;background:var(--surface2);border-bottom:.5px solid var(--border)}
 .ofp-val{font-size:11px;font-weight:500;color:var(--text);padding:6px 12px;border-bottom:.5px solid var(--border);font-family:var(--mono)}
 .ofp-route{font-family:var(--mono);font-size:10px;color:var(--text);padding:10px 12px;background:var(--surface2);border:.5px solid var(--border);border-radius:var(--radius);margin:8px 0;word-break:break-all;line-height:1.7;display:none}
-
-/* ATC block */
 .atc-block{background:var(--surface2);border:.5px solid var(--border2);border-radius:var(--radius);padding:11px 13px;margin-top:11px;font-family:var(--mono);font-size:11px;color:var(--text);white-space:pre;line-height:1.8;display:none}
 .copy-btn{width:100%;padding:7px;margin-top:6px;border-radius:var(--radius);border:.5px solid var(--border2);background:transparent;font-size:11px;color:var(--text2);cursor:pointer;font-family:var(--sans);display:none}
 .copy-btn:hover{background:var(--surface2)}
-
-/* Primary button */
 .btn-primary{width:100%;padding:10px;margin-top:10px;background:var(--red);color:#fff;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);letter-spacing:.2px}
 .btn-primary:hover{background:var(--red-dark)}
-
-/* Report */
+.btn-secondary{width:100%;padding:9px;margin-top:8px;background:transparent;color:var(--text2);border:.5px solid var(--border2);border-radius:var(--radius);font-size:12px;cursor:pointer;font-family:var(--sans)}
+.btn-secondary:hover{background:var(--surface2);color:var(--text)}
 .outcome-row{display:flex;gap:6px;margin-top:5px}
 .outcome-btn{flex:1;padding:7px 8px;border-radius:var(--radius);border:.5px solid var(--border2);background:transparent;font-size:11px;color:var(--text2);cursor:pointer;font-family:var(--sans)}
 .outcome-btn:hover{background:var(--surface2)}
@@ -152,30 +116,94 @@ textarea{resize:vertical;font-family:var(--mono);line-height:1.6}
 .outcome-btn.sel-inc{border-color:var(--warn-text);color:var(--warn-text);background:var(--warn-bg)}
 .outcome-btn.sel-div{border-color:var(--red-text);color:var(--red-text);background:var(--red-bg)}
 .submit-btn{display:none}
-
-/* Loan box */
-.loan-box{background:var(--surface2);border-radius:var(--radius);padding:13px 15px;margin-top:1rem;border:.5px solid var(--border)}
+/* Bank system */
+.bank-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.credit-score{text-align:right}
+.credit-score-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.credit-score-val{font-size:22px;font-weight:600;color:var(--green-text)}
+.credit-tier{font-size:11px;color:var(--text2)}
 .loan-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
-.loan-btn{padding:9px 10px;border-radius:var(--radius);border:.5px solid var(--border2);background:var(--surface);font-size:11px;color:var(--text);cursor:pointer;text-align:left;font-family:var(--sans)}
-.loan-btn:hover{background:var(--surface3)}
-.loan-amount{font-weight:600;font-size:14px;display:block;margin-bottom:2px;font-family:var(--mono)}
+.loan-btn{padding:10px 12px;border-radius:var(--radius);border:.5px solid var(--border2);background:var(--surface2);font-size:11px;color:var(--text);cursor:pointer;text-align:left;font-family:var(--sans);transition:all .12s}
+.loan-btn:hover{border-color:var(--green-text);background:var(--green-bg)}
+.loan-btn.locked{opacity:.35;cursor:not-allowed;pointer-events:none}
+.loan-amount{font-weight:600;font-size:15px;display:block;margin-bottom:2px;font-family:var(--mono)}
 .loan-rate{color:var(--text3);font-size:10px}
-
-/* Loading overlay */
+.loan-limit-note{font-size:10px;color:var(--text3);margin-top:10px;padding:8px 10px;background:var(--surface2);border-radius:var(--radius);border:.5px solid var(--border)}
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;z-index:200;display:none}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:480px;margin:1rem}
+.modal-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.modal-sub{font-size:11px;color:var(--text2);margin-bottom:16px;line-height:1.6}
+.modal-amount{font-size:28px;font-weight:600;color:var(--green-text);font-family:var(--mono);margin-bottom:16px}
+.modal-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:.5px solid var(--border)}
+.modal-row:last-of-type{border-bottom:none}
+.modal-row-label{color:var(--text2)}
+.modal-row-val{color:var(--text);font-weight:500;font-family:var(--mono)}
+.modal-terms{background:var(--surface2);border-radius:var(--radius);padding:10px 12px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7}
+.pin-row{display:flex;gap:8px;align-items:center;margin-top:12px}
+.pin-input{font-family:var(--mono);font-size:16px;letter-spacing:4px;text-align:center;width:140px;flex-shrink:0}
+.pin-label{font-size:11px;color:var(--text2)}
+.modal-btns{display:flex;gap:8px;margin-top:14px}
+.modal-btns .btn-primary{margin-top:0}
+.modal-btns .btn-secondary{margin-top:0}
+.modal-error{font-size:11px;color:var(--red-text);margin-top:6px;display:none}
+/* Route rejection */
+.rejection-banner{background:var(--red-bg);border:.5px solid var(--red-text);border-radius:var(--radius);padding:10px 13px;margin-top:10px;font-size:12px;color:var(--red-text);display:none;line-height:1.6}
+/* Loading */
 .loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:100}
 .loading-mark{width:48px;height:48px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px}
 .loading-text{font-size:13px;color:var(--text2)}
 .loading.hidden{display:none}
-
-/* Public badge */
 .public-notice{background:var(--surface2);border:.5px solid var(--border);border-radius:var(--radius);padding:8px 12px;font-size:11px;color:var(--text3);margin-bottom:1rem;display:flex;align-items:center;gap:6px}
 </style>
 </head>
 <body>
-
 <div class="loading" id="loading">
   <div class="loading-mark">AA</div>
   <div class="loading-text">Loading ops data…</div>
+</div>
+
+<!-- Loan modal -->
+<div class="modal-overlay" id="loan-modal">
+  <div class="modal">
+    <div class="modal-title">Loan application</div>
+    <div class="modal-sub" id="loan-modal-sub">Review your loan terms and justify the request to proceed.</div>
+    <div class="modal-amount" id="loan-modal-amount">$0</div>
+    <div id="loan-modal-terms" class="modal-terms"></div>
+    <div class="field-group" style="margin-top:12px">
+      <label>Justify this loan — what is it for?</label>
+      <textarea id="loan-justification" rows="3" placeholder="e.g. Acquiring Boeing 787-9 to expand transatlantic capacity and unlock Pacific routes…"></textarea>
+    </div>
+    <div class="pin-row">
+      <div class="pin-label">Bank PIN</div>
+      <input type="password" class="pin-input" id="loan-pin" maxlength="4" placeholder="••••"/>
+    </div>
+    <div class="modal-error" id="loan-error">Incorrect PIN. Authorization denied.</div>
+    <div class="modal-btns">
+      <button class="btn-secondary" onclick="closeLoanModal()">Cancel</button>
+      <button class="btn-primary" style="margin-top:0" onclick="confirmLoan()">Authorize loan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Purchase modal -->
+<div class="modal-overlay" id="purchase-modal">
+  <div class="modal">
+    <div class="modal-title" id="pur-title">Aircraft acquisition</div>
+    <div class="modal-sub" id="pur-sub"></div>
+    <div class="modal-amount" id="pur-amount"></div>
+    <div class="modal-terms" id="pur-terms"></div>
+    <div class="pin-row">
+      <div class="pin-label">Bank PIN</div>
+      <input type="password" class="pin-input" id="pur-pin" maxlength="4" placeholder="••••"/>
+    </div>
+    <div class="modal-error" id="pur-error">Incorrect PIN. Transaction declined.</div>
+    <div class="modal-btns">
+      <button class="btn-secondary" onclick="closePurchaseModal()">Cancel</button>
+      <button class="btn-primary" style="margin-top:0" onclick="confirmPurchase()">Confirm acquisition</button>
+    </div>
+  </div>
 </div>
 
 <div class="site-wrap">
@@ -194,9 +222,8 @@ textarea{resize:vertical;font-family:var(--mono);line-height:1.6}
     </div>
   </header>
 
-  <div id="public-notice" class="public-notice" style="display:none">
-    <i class="ti ti-eye" aria-hidden="true"></i>
-    Public view — fleet, routes, and log visible. Log in for ops access.
+  <div id="public-notice" class="public-notice">
+    <i class="ti ti-eye"></i> Public view — fleet, routes, and log visible. Log in for ops access.
   </div>
 
   <div class="metrics">
@@ -218,69 +245,68 @@ textarea{resize:vertical;font-family:var(--mono);line-height:1.6}
     <button class="nav-btn" onclick="sw('log',this)">Log</button>
   </nav>
 
-  <!-- FLEET -->
   <div id="panel-fleet" class="panel active">
     <div class="panel-title">Your fleet</div>
-    <div id="fleet-list"><div style="color:var(--text3);font-size:13px">Loading fleet…</div></div>
+    <div id="fleet-list"></div>
   </div>
 
-  <!-- ROUTES -->
   <div id="panel-routes" class="panel">
     <div class="panel-title">Active routes</div>
     <div id="routes-list"></div>
   </div>
 
-  <!-- FINANCES (ops only) -->
   <div id="panel-finance" class="panel">
     <div class="panel-title">Financial summary — Season 4</div>
-    <div class="finance-card">
-      <div id="finance-body"></div>
-    </div>
-    <div class="loan-box">
-      <div style="font-size:12px;font-weight:500;color:var(--text)">Take a loan</div>
-      <div class="loan-grid">
-        <button class="loan-btn"><span class="loan-amount">$1,000,000</span><span class="loan-rate">4.5% APR · 12mo</span></button>
-        <button class="loan-btn"><span class="loan-amount">$5,000,000</span><span class="loan-rate">5.9% APR · 36mo</span></button>
-        <button class="loan-btn"><span class="loan-amount">$20,000,000</span><span class="loan-rate">7.2% APR · 60mo</span></button>
-        <button class="loan-btn"><span class="loan-amount">$50,000,000</span><span class="loan-rate">8.5% APR · 120mo</span></button>
+    <div class="finance-card" id="finance-body"></div>
+    <!-- Bank -->
+    <div class="card" style="margin-top:12px">
+      <div class="bank-header">
+        <div>
+          <div style="font-size:13px;font-weight:500;color:var(--text)">First National Aviation Bank</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">Commercial lending · Established carrier account</div>
+        </div>
+        <div class="credit-score">
+          <div class="credit-score-label">Credit score</div>
+          <div class="credit-score-val" id="credit-score-val">—</div>
+          <div class="credit-tier" id="credit-tier">—</div>
+        </div>
       </div>
+      <div style="font-size:11px;color:var(--text2);margin-bottom:8px">Select a loan facility. You will be asked to justify the request and authorize with your bank PIN.</div>
+      <div class="loan-grid" id="loan-grid"></div>
+      <div class="loan-limit-note" id="loan-limit-note"></div>
     </div>
   </div>
 
-  <!-- STAFF (ops only) -->
   <div id="panel-staff" class="panel">
     <div class="panel-title" id="staff-title">Flight crew</div>
     <div id="staff-list"></div>
   </div>
 
-  <!-- DISPATCH (ops only) -->
   <div id="panel-dispatch" class="panel">
     <div class="panel-title">Dispatch — OFP import</div>
     <div class="dispatch-wrap">
-      <div class="hint">Paste your Simbrief OFP below. Each field on its own line in key / value format. I'll parse it, display the full briefing card, and roll a swiss cheese seed before generating the ATC block.</div>
+      <div class="hint">Paste your Simbrief OFP below. The system validates the route against your active network before generating the ATC block. Unauthorized routes are rejected.</div>
       <div class="field-group">
         <label>Simbrief OFP</label>
-        <textarea id="ofp-input" rows="8" placeholder="Airline&#10;AAL&#10;Flight #&#10;1232&#10;Departure&#10;KMIA&#10;..."></textarea>
+        <textarea id="ofp-input" rows="8" placeholder="Airline&#10;AAL&#10;Flight #&#10;1232&#10;Departure&#10;KMIA&#10;Arrival&#10;KJFK&#10;..."></textarea>
       </div>
       <div class="field-group">
         <label>Pilot in command</label>
-        <select id="d-pic">
-          <option value="player">You (player)</option>
-        </select>
+        <select id="d-pic"><option value="player">You (player)</option></select>
       </div>
-      <button class="btn-primary" onclick="handleDispatch()">Parse OFP &amp; generate ATC block</button>
+      <button class="btn-primary" onclick="handleDispatch()">Validate &amp; generate ATC block</button>
+      <div class="rejection-banner" id="rejection-banner"></div>
       <div class="ofp-card" id="ofp-card"></div>
       <div class="ofp-route" id="ofp-route"></div>
       <div class="atc-block" id="atc-block"></div>
-      <button class="copy-btn" id="copy-btn" onclick="copyBlock()"><i class="ti ti-copy" aria-hidden="true"></i> Copy — paste into ATC chat</button>
+      <button class="copy-btn" id="copy-btn" onclick="copyBlock()"><i class="ti ti-copy"></i> Copy — paste into ATC chat</button>
     </div>
   </div>
 
-  <!-- REPORT (ops only) -->
   <div id="panel-report" class="panel">
     <div class="panel-title">Report completed flight</div>
     <div class="dispatch-wrap">
-      <div class="hint">Log your completed flight. Aircraft hours tick automatically and finances update.</div>
+      <div class="hint">Log your completed flight. Aircraft hours, finances, and pilot records update automatically.</div>
       <div class="field-row">
         <div><label>Flight number</label><input type="text" id="r-flt" placeholder="e.g. AAL1232"/></div>
         <div><label>Block time</label><input type="text" id="r-time" placeholder="e.g. 3h00"/></div>
@@ -292,6 +318,7 @@ textarea{resize:vertical;font-family:var(--mono);line-height:1.6}
           <option value="737-800">Boeing 737-800 — N738AA</option>
           <option value="A320neo">Airbus A320neo — N320AA</option>
           <option value="777-300ER">Boeing 777-300ER — N777AA</option>
+          <option value="787-9">Boeing 787-9 — N789AA</option>
         </select>
       </div>
       <div class="field-row">
@@ -299,11 +326,15 @@ textarea{resize:vertical;font-family:var(--mono);line-height:1.6}
         <div><label>Destination</label><input type="text" id="r-dst" placeholder="KJFK" style="text-transform:uppercase"/></div>
       </div>
       <div class="field-group">
+        <label>Pilot in command</label>
+        <select id="r-pic"><option value="player">You (player)</option></select>
+      </div>
+      <div class="field-group">
         <label>Outcome</label>
         <div class="outcome-row">
-          <button class="outcome-btn" id="ob-ok" onclick="setOutcome('ok')"><i class="ti ti-circle-check" aria-hidden="true"></i> Completed</button>
-          <button class="outcome-btn" id="ob-inc" onclick="setOutcome('inc')"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Incident</button>
-          <button class="outcome-btn" id="ob-div" onclick="setOutcome('div')"><i class="ti ti-arrows-split-2" aria-hidden="true"></i> Diverted</button>
+          <button class="outcome-btn" id="ob-ok" onclick="setOutcome('ok')"><i class="ti ti-circle-check"></i> Completed</button>
+          <button class="outcome-btn" id="ob-inc" onclick="setOutcome('inc')"><i class="ti ti-alert-triangle"></i> Incident</button>
+          <button class="outcome-btn" id="ob-div" onclick="setOutcome('div')"><i class="ti ti-arrows-split-2"></i> Diverted</button>
         </div>
       </div>
       <div class="field-group">
@@ -314,7 +345,6 @@ textarea{resize:vertical;font-family:var(--mono);line-height:1.6}
     </div>
   </div>
 
-  <!-- LOG -->
   <div id="panel-log" class="panel">
     <div class="panel-title" id="log-title">Flight log</div>
     <div id="log-list"></div>
@@ -326,8 +356,11 @@ textarea{resize:vertical;font-family:var(--mono);line-height:1.6}
 <script src="js/ofp.js"></script>
 <script>
 const SQ_CODES=['2341','3271','4412','1073','2204','3350','4521','1162','2033','3104','5127','6032'];
+const BANK_PIN = '2509'; // change this to your pin
 let chosenOutcome='';
 let lastATCBlock='';
+let pendingLoan=null;
+let pendingPurchase=null;
 
 // ── Boot ───────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', async () => {
@@ -335,8 +368,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   await initSupabase();
   await loadAll();
   renderAll();
+  renderBankPanel();
   renderDispatchPilots();
-  renderDispatchAircraft();
+  renderReportPilots();
   applyAuthState();
   document.getElementById('loading').classList.add('hidden');
 });
@@ -344,9 +378,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 // ── Auth ───────────────────────────────────────────────
 function applyAuthState() {
   const authed = checkAuth();
-  document.querySelectorAll('.ops-only').forEach(el => {
-    el.classList.toggle('visible', authed);
-  });
+  document.querySelectorAll('.ops-only').forEach(el => el.classList.toggle('visible', authed));
   const btn = document.getElementById('auth-btn');
   if (authed) {
     btn.textContent = 'Ops active';
@@ -370,7 +402,6 @@ function toggleAuth() {
   }
 }
 
-// ── Tab switching ──────────────────────────────────────
 function sw(tab, btn) {
   const opsOnly = ['finance','staff','dispatch','report'];
   if (opsOnly.includes(tab) && !isAuthenticated) {
@@ -384,12 +415,171 @@ function sw(tab, btn) {
   if (panel) panel.classList.add('active');
 }
 
+// ── Credit score ───────────────────────────────────────
+function calcCreditScore() {
+  const f = STATE.finances;
+  if (!f) return { score: 600, tier: 'Standard', maxLoan: 50000000 };
+  const flightCount = STATE.totalFlights;
+  const debtRatio = f.debt / Math.max(f.cash, 1);
+  let score = 600;
+  score += Math.min(flightCount * 0.4, 120);
+  score += Math.min(f.cash / 1000000, 80);
+  score -= Math.min(debtRatio * 60, 100);
+  score = Math.round(Math.max(500, Math.min(850, score)));
+  let tier, maxLoan;
+  if (score >= 780) { tier = 'Platinum · Tier 4'; maxLoan = 500000000; }
+  else if (score >= 720) { tier = 'Gold · Tier 3'; maxLoan = 200000000; }
+  else if (score >= 660) { tier = 'Silver · Tier 2'; maxLoan = 100000000; }
+  else { tier = 'Standard · Tier 1'; maxLoan = 50000000; }
+  return { score, tier, maxLoan };
+}
+
+// ── Bank panel ─────────────────────────────────────────
+function renderBankPanel() {
+  const { score, tier, maxLoan } = calcCreditScore();
+  const scoreEl = document.getElementById('credit-score-val');
+  const tierEl = document.getElementById('credit-tier');
+  if (scoreEl) scoreEl.textContent = score;
+  if (tierEl) tierEl.textContent = tier;
+
+  const loans = [
+    { amount: 10000000, rate: '4.2%', term: '12mo', label: '$10M' },
+    { amount: 50000000, rate: '5.1%', term: '36mo', label: '$50M' },
+    { amount: 100000000, rate: '6.4%', term: '60mo', label: '$100M' },
+    { amount: 200000000, rate: '7.8%', term: '84mo', label: '$200M' },
+    { amount: 350000000, rate: '8.9%', term: '120mo', label: '$350M' },
+    { amount: 500000000, rate: '9.5%', term: '120mo', label: '$500M' },
+  ];
+
+  const grid = document.getElementById('loan-grid');
+  if (!grid) return;
+  grid.innerHTML = loans.map(l => {
+    const locked = l.amount > maxLoan;
+    return `<button class="loan-btn${locked ? ' locked' : ''}" onclick="openLoanModal(${l.amount},'${l.rate}','${l.term}')">
+      <span class="loan-amount">${l.label}</span>
+      <span class="loan-rate">${l.rate} APR · ${l.term}${locked ? ' · Score too low' : ''}</span>
+    </button>`;
+  }).join('');
+
+  const note = document.getElementById('loan-limit-note');
+  if (note) note.textContent = `Your credit score of ${score} (${tier}) unlocks facilities up to ${fmt$(maxLoan)}. Improve score by logging more flights and maintaining a healthy cash-to-debt ratio.`;
+}
+
+// ── Loan modal ─────────────────────────────────────────
+function openLoanModal(amount, rate, term) {
+  pendingLoan = { amount, rate, term };
+  document.getElementById('loan-modal-amount').textContent = fmt$(amount);
+  const monthly = Math.round((amount * (parseFloat(rate) / 100)) / 12 + amount / parseInt(term));
+  document.getElementById('loan-modal-terms').innerHTML = `
+    <div class="modal-row"><span class="modal-row-label">Principal</span><span class="modal-row-val">${fmt$(amount)}</span></div>
+    <div class="modal-row"><span class="modal-row-label">Interest rate</span><span class="modal-row-val">${rate} APR</span></div>
+    <div class="modal-row"><span class="modal-row-label">Term</span><span class="modal-row-val">${term}</span></div>
+    <div class="modal-row"><span class="modal-row-label">Est. monthly repayment</span><span class="modal-row-val">${fmt$(monthly)}</span></div>
+    <div class="modal-row"><span class="modal-row-label">Total repayable</span><span class="modal-row-val">${fmt$(Math.round(monthly * parseInt(term)))}</span></div>`;
+  document.getElementById('loan-justification').value = '';
+  document.getElementById('loan-pin').value = '';
+  document.getElementById('loan-error').style.display = 'none';
+  document.getElementById('loan-modal').classList.add('open');
+}
+
+function closeLoanModal() {
+  document.getElementById('loan-modal').classList.remove('open');
+  pendingLoan = null;
+}
+
+async function confirmLoan() {
+  const pin = document.getElementById('loan-pin').value;
+  const justification = document.getElementById('loan-justification').value.trim();
+  const errEl = document.getElementById('loan-error');
+  if (pin !== BANK_PIN) { errEl.style.display = 'block'; return; }
+  if (!justification) { errEl.textContent = 'Please justify this loan request.'; errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+  const f = STATE.finances;
+  await sb.from('finances').update({
+    cash: f.cash + pendingLoan.amount,
+    debt: f.debt + pendingLoan.amount,
+    loan_drawdowns: f.loan_drawdowns + pendingLoan.amount,
+    updated_at: new Date().toISOString(),
+  }).eq('id', f.id);
+  closeLoanModal();
+  await loadAll();
+  renderAll();
+  renderBankPanel();
+}
+
+// ── Purchase modal ─────────────────────────────────────
+function openPurchaseModal(aircraft) {
+  pendingPurchase = aircraft;
+  const prices = { '787-9': 325000000, '777-300ER': 290000000, 'A320neo': 115000000, '737-800': 98000000, 'E175': 52000000 };
+  const price = prices[aircraft.type_key] || 100000000;
+  pendingPurchase.price = price;
+  document.getElementById('pur-title').textContent = 'Acquire ' + aircraft.name;
+  document.getElementById('pur-sub').textContent = 'This transaction will be deducted from your cash balance immediately.';
+  document.getElementById('pur-amount').textContent = fmt$(price);
+  const f = STATE.finances;
+  const canAfford = f && f.cash >= price;
+  document.getElementById('pur-terms').innerHTML = `
+    <div class="modal-row"><span class="modal-row-label">Aircraft</span><span class="modal-row-val">${aircraft.name}</span></div>
+    <div class="modal-row"><span class="modal-row-label">Registration</span><span class="modal-row-val">${aircraft.registration}</span></div>
+    <div class="modal-row"><span class="modal-row-label">Current cash</span><span class="modal-row-val">${fmt$(f?.cash)}</span></div>
+    <div class="modal-row"><span class="modal-row-label">Cash after acquisition</span><span class="modal-row-val" style="color:${canAfford ? 'var(--green-text)' : 'var(--red-text)'}">${fmt$((f?.cash || 0) - price)}</span></div>
+    ${!canAfford ? '<div style="color:var(--red-text);font-size:11px;margin-top:6px">⚠ Insufficient funds. Take a loan first.</div>' : ''}`;
+  document.getElementById('pur-pin').value = '';
+  document.getElementById('pur-error').style.display = 'none';
+  document.getElementById('purchase-modal').classList.add('open');
+}
+
+function closePurchaseModal() {
+  document.getElementById('purchase-modal').classList.remove('open');
+  pendingPurchase = null;
+}
+
+async function confirmPurchase() {
+  const pin = document.getElementById('pur-pin').value;
+  const errEl = document.getElementById('pur-error');
+  if (pin !== BANK_PIN) { errEl.style.display = 'block'; return; }
+  const f = STATE.finances;
+  if (!f || f.cash < pendingPurchase.price) {
+    errEl.textContent = 'Insufficient funds.';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+  await sb.from('fleet').update({ locked: false, status: 'Active', ownership: 'Owned' }).eq('id', pendingPurchase.id);
+  await sb.from('finances').update({
+    cash: f.cash - pendingPurchase.price,
+    fleet_costs: f.fleet_costs + pendingPurchase.price,
+    updated_at: new Date().toISOString(),
+  }).eq('id', f.id);
+  closePurchaseModal();
+  await loadAll();
+  renderAll();
+}
+
 // ── Dispatch ───────────────────────────────────────────
 function handleDispatch() {
   const raw = document.getElementById('ofp-input').value.trim();
   if (!raw) { alert('Paste your Simbrief OFP first.'); return; }
   const pic = document.getElementById('d-pic').value;
   const parsed = parseOFP(raw);
+
+  // Route validation
+  const rejEl = document.getElementById('rejection-banner');
+  const origin = parsed.depIcao;
+  const dest = parsed.arrIcao;
+  const routeExists = STATE.routes.find(r => r.origin === origin && r.destination === dest);
+
+  if (origin && dest && !routeExists) {
+    rejEl.innerHTML = `<strong>Route rejected.</strong> ${origin} → ${dest} is not in your active route network. Add this route before dispatching.`;
+    rejEl.style.display = 'block';
+    document.getElementById('ofp-card').style.display = 'none';
+    document.getElementById('ofp-route').style.display = 'none';
+    document.getElementById('atc-block').style.display = 'none';
+    document.getElementById('copy-btn').style.display = 'none';
+    return;
+  }
+  rejEl.style.display = 'none';
+
   renderOFPCard(parsed);
   const acType = detectAcType(parsed.ac);
   const seed = rollEventSeed(pic, acType);
@@ -407,7 +597,7 @@ function detectAcType(acStr) {
   if (acStr.includes('320')) return 'A320neo';
   if (acStr.includes('777') || acStr.includes('77W')) return '777-300ER';
   if (acStr.includes('175') || acStr.includes('E17')) return 'E175';
-  if (acStr.includes('789') || acStr.includes('787')) return '777-300ER';
+  if (acStr.includes('789') || acStr.includes('787')) return '787-9';
   return '737-800';
 }
 
@@ -415,7 +605,7 @@ function copyBlock() {
   navigator.clipboard.writeText(lastATCBlock).then(() => {
     const btn = document.getElementById('copy-btn');
     btn.textContent = '✓ Copied — paste into ATC chat';
-    setTimeout(() => { btn.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i> Copy — paste into ATC chat'; }, 2400);
+    setTimeout(() => { btn.innerHTML = '<i class="ti ti-copy"></i> Copy — paste into ATC chat'; }, 2400);
   });
 }
 
@@ -423,8 +613,7 @@ function copyBlock() {
 function setOutcome(val) {
   chosenOutcome = val;
   ['ok','inc','div'].forEach(v => {
-    const btn = document.getElementById('ob-' + v);
-    btn.className = 'outcome-btn' + (v === val ? ' sel-' + val : '');
+    document.getElementById('ob-' + v).className = 'outcome-btn' + (v === val ? ' sel-' + val : '');
   });
   document.getElementById('submit-btn').style.display = 'block';
 }
@@ -435,34 +624,46 @@ async function submitReport() {
   const acType = document.getElementById('r-ac').value;
   const org = (document.getElementById('r-org').value.trim() || '????').toUpperCase();
   const dst = (document.getElementById('r-dst').value.trim() || '????').toUpperCase();
+  const picKey = document.getElementById('r-pic').value;
   const notes = document.getElementById('r-notes').value.trim();
   if (!chosenOutcome) { alert('Select an outcome first.'); return; }
   const statusMap = { ok: 'Completed', inc: 'Incident', div: 'Diverted' };
   const status = statusMap[chosenOutcome];
-  const routeRev = STATE.routes.find(r => r.origin === org && r.destination === dst);
-  const revenue = status === 'Completed' ? (routeRev?.revenue_per_flight || 0) : 0;
-  const aircraft = STATE.fleet.find(a => a.name.includes(acType) || a.registration.includes(acType));
+  const routeMatch = STATE.routes.find(r => r.origin === org && r.destination === dst);
+  // Diverted or incident = reduced/no revenue
+  let revenue = 0;
+  if (status === 'Completed') revenue = routeMatch?.revenue_per_flight || 0;
+  else if (status === 'Incident') revenue = Math.round((routeMatch?.revenue_per_flight || 0) * 0.6);
+  const aircraft = STATE.fleet.find(a => a.name.toLowerCase().includes(acType.toLowerCase()) || a.registration.includes(acType));
+  const pilot = STATE.pilots.find(p => p.initials === picKey);
   await logFlight({
     flightNumber: flt, origin: org, destination: dst,
     aircraftType: acType, registration: aircraft?.registration || '',
-    blockTime: time, status, notes, revenue,
+    blockTime: time, pilotId: pilot?.id || null,
+    status, notes, revenue,
   });
   ['r-flt','r-time','r-org','r-dst','r-notes'].forEach(id => { document.getElementById(id).value = ''; });
   chosenOutcome = '';
   ['ok','inc','div'].forEach(v => { document.getElementById('ob-'+v).className = 'outcome-btn'; });
   document.getElementById('submit-btn').style.display = 'none';
-  sw('log', document.querySelector('.nav-btn[onclick*="log"]'));
+  renderBankPanel();
+  sw('log', document.querySelectorAll('.nav-btn')[6]);
 }
 
 // ── Render helpers ─────────────────────────────────────
 function renderDispatchPilots() {
   const sel = document.getElementById('d-pic');
   if (!sel) return;
-  const extra = STATE.pilots.map(p => `<option value="${p.initials}">${p.name} — ${p.role}</option>`).join('');
-  sel.innerHTML = '<option value="player">You (player)</option>' + extra;
+  sel.innerHTML = '<option value="player">You (player)</option>' +
+    STATE.pilots.map(p => `<option value="${p.initials}">${p.name} — ${p.role}</option>`).join('');
 }
 
-function renderDispatchAircraft() {}
+function renderReportPilots() {
+  const sel = document.getElementById('r-pic');
+  if (!sel) return;
+  sel.innerHTML = '<option value="player">You (player)</option>' +
+    STATE.pilots.map(p => `<option value="${p.initials}">${p.name} — ${p.role}</option>`).join('');
+}
 </script>
 </body>
 </html>
