@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AAL Virtual — Ops Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#B71C1C;--red-dark:#991515;
+  --bg:#0e0e0d;--surface:#161614;--surface2:#1e1e1b;--surface3:#252521;
+  --border:#2a2a27;--border2:#353530;
+  --text:#f0ede6;--text2:#8c8a82;--text3:#5a5854;
+  --green:#2d6a3f;--green-bg:#142619;--green-text:#5cb87a;
+  --yellow-bg:#1f1a08;--yellow-text:#c9a227;
+  --blue-bg:#0a1929;--blue-text:#4a9eff;
+  --red-bg:#1f0808;--red-text:#e05252;
+  --warn-bg:#1f1508;--warn-text:#c98a27;
+  --radius:6px;--radius-lg:10px;
+  --mono:'DM Mono',monospace;
+  --sans:'Syne',sans-serif;
+}
+html{background:var(--bg);color:var(--text);font-family:var(--sans)}
+body{min-height:100vh}
+
+.site-wrap{max-width:860px;margin:0 auto;padding:1.5rem 1rem 4rem}
+
+/* Header */
+.site-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:1.25rem;margin-bottom:1.5rem;border-bottom:0.5px solid var(--border)}
+.logo-group{display:flex;align-items:center;gap:12px}
+.logo-mark{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:14px;letter-spacing:.5px}
+.logo-title{font-size:16px;font-weight:600;color:var(--text);letter-spacing:.3px}
+.logo-sub{font-size:11px;color:var(--text2);margin-top:2px}
+.header-meta{font-size:11px;color:var(--text3);text-align:right;line-height:1.6}
+.auth-btn{font-size:11px;color:var(--text3);background:transparent;border:.5px solid var(--border2);border-radius:var(--radius);padding:4px 10px;cursor:pointer;margin-top:4px}
+.auth-btn:hover{color:var(--text);border-color:var(--border2)}
+.auth-btn.active{color:var(--red-text);border-color:var(--red)}
+
+/* Metrics */
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:1.5rem}
+.metric{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px}
+.metric-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.metric-value{font-size:20px;font-weight:600;color:var(--text)}
+.metric-value.green{color:var(--green-text)}
+.metric-value.red{color:var(--red-text)}
+
+/* Nav */
+.nav{display:flex;gap:4px;margin-bottom:1.25rem;flex-wrap:wrap}
+.nav-btn{padding:5px 12px;border-radius:var(--radius);border:.5px solid var(--border);background:transparent;font-size:12px;color:var(--text2);cursor:pointer;font-family:var(--sans);transition:all .12s}
+.nav-btn:hover{background:var(--surface2);color:var(--text)}
+.nav-btn.active{background:var(--red);color:#fff;border-color:var(--red);font-weight:500}
+.nav-btn.ops-only{display:none}
+.nav-btn.ops-only.visible{display:inline-block}
+
+/* Panels */
+.panel{display:none}.panel.active{display:block}
+.panel-title{font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px}
+
+/* Cards */
+.card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:13px 15px;margin-bottom:7px}
+.card-title{font-size:13px;font-weight:500;color:var(--text)}
+.card-sub{font-size:11px;color:var(--text2);margin-top:2px}
+
+/* Fleet */
+.fleet-card{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.fleet-card.locked{opacity:.35}
+.progress-bar{background:var(--surface3);border-radius:3px;height:3px;margin-top:6px;width:120px}
+.progress-fill{height:3px;border-radius:3px;background:var(--red)}
+
+/* Routes */
+.route-card{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.route-airports{font-size:14px;font-weight:500;color:var(--text);letter-spacing:.5px;font-family:var(--mono)}
+.revenue{font-size:12px;font-weight:500;color:var(--green-text)}
+.section-label{font-size:11px;color:var(--text3);margin:12px 0 6px;padding-left:2px}
+
+/* Finances */
+.finance-card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.1rem}
+.finance-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:.5px solid var(--border);font-size:13px}
+.finance-row:last-child{border-bottom:none}
+.finance-row.total-row{border-top:.5px solid var(--border2);margin-top:4px;padding-top:10px}
+.finance-label{color:var(--text2)}
+.finance-value.pos{color:var(--green-text);font-weight:500}
+.finance-value.neg{color:var(--red-text);font-weight:500}
+
+/* Staff */
+.staff-card{display:flex;align-items:center;gap:11px}
+.pilot-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.pilot-earn{margin-left:auto;font-size:12px;font-weight:500;color:var(--green-text);white-space:nowrap}
+
+/* Color themes for avatars */
+.av-info{background:var(--blue-bg);color:var(--blue-text)}
+.av-success{background:var(--green-bg);color:var(--green-text)}
+.av-warning{background:var(--warn-bg);color:var(--warn-text)}
+.av-danger{background:var(--red-bg);color:var(--red-text)}
+.av-secondary{background:var(--surface3);color:var(--text2)}
+
+/* Log */
+.log-entry{display:flex;gap:10px;padding:8px 0;border-bottom:.5px solid var(--border);align-items:flex-start}
+.log-entry:last-child{border-bottom:none}
+.log-date{font-size:10px;color:var(--text3);min-width:48px;padding-top:2px;font-family:var(--mono)}
+.log-route{font-size:13px;font-weight:500;color:var(--text);font-family:var(--mono)}
+.log-detail{font-size:10px;color:var(--text2);margin-top:2px}
+.log-status{font-size:10px;padding:2px 7px;border-radius:var(--radius);margin-left:auto;white-space:nowrap;flex-shrink:0}
+.log-ok{background:var(--green-bg);color:var(--green-text)}
+.log-inc{background:var(--warn-bg);color:var(--warn-text)}
+.log-div{background:var(--red-bg);color:var(--red-text)}
+
+/* Badges */
+.badge{font-size:10px;padding:2px 8px;border-radius:var(--radius);font-weight:500;white-space:nowrap;flex-shrink:0}
+.badge-success{background:var(--green-bg);color:var(--green-text)}
+.badge-warning{background:var(--warn-bg);color:var(--warn-text)}
+.badge-danger{background:var(--red-bg);color:var(--red-text)}
+.badge-muted{background:var(--surface3);color:var(--text3)}
+
+/* Dispatch */
+.dispatch-wrap{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem}
+.hint{font-size:11px;color:var(--text2);margin-bottom:12px;line-height:1.6}
+label{font-size:11px;color:var(--text2);display:block;margin-bottom:4px}
+select,input,textarea{width:100%;background:var(--surface2);border:.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:12px;font-family:var(--sans);padding:8px 10px;outline:none;box-sizing:border-box}
+select:focus,input:focus,textarea:focus{border-color:var(--red)}
+textarea{resize:vertical;font-family:var(--mono);line-height:1.6}
+.field-group{margin-bottom:10px}
+.field-row{display:flex;gap:8px;margin-bottom:10px}
+.field-row>div{flex:1;min-width:0}
+
+/* OFP card */
+.ofp-card{display:none;grid-template-columns:1fr 1fr;margin:12px 0;border:.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.ofp-section-header{grid-column:1/-1;font-size:10px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:6px 12px;background:var(--surface3);border-bottom:.5px solid var(--border)}
+.ofp-label{font-size:11px;color:var(--text2);padding:6px 12px;background:var(--surface2);border-bottom:.5px solid var(--border)}
+.ofp-val{font-size:11px;font-weight:500;color:var(--text);padding:6px 12px;border-bottom:.5px solid var(--border);font-family:var(--mono)}
+.ofp-route{font-family:var(--mono);font-size:10px;color:var(--text);padding:10px 12px;background:var(--surface2);border:.5px solid var(--border);border-radius:var(--radius);margin:8px 0;word-break:break-all;line-height:1.7;display:none}
+
+/* ATC block */
+.atc-block{background:var(--surface2);border:.5px solid var(--border2);border-radius:var(--radius);padding:11px 13px;margin-top:11px;font-family:var(--mono);font-size:11px;color:var(--text);white-space:pre;line-height:1.8;display:none}
+.copy-btn{width:100%;padding:7px;margin-top:6px;border-radius:var(--radius);border:.5px solid var(--border2);background:transparent;font-size:11px;color:var(--text2);cursor:pointer;font-family:var(--sans);display:none}
+.copy-btn:hover{background:var(--surface2)}
+
+/* Primary button */
+.btn-primary{width:100%;padding:10px;margin-top:10px;background:var(--red);color:#fff;border:none;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--sans);letter-spacing:.2px}
+.btn-primary:hover{background:var(--red-dark)}
+
+/* Report */
+.outcome-row{display:flex;gap:6px;margin-top:5px}
+.outcome-btn{flex:1;padding:7px 8px;border-radius:var(--radius);border:.5px solid var(--border2);background:transparent;font-size:11px;color:var(--text2);cursor:pointer;font-family:var(--sans)}
+.outcome-btn:hover{background:var(--surface2)}
+.outcome-btn.sel-ok{border-color:var(--green-text);color:var(--green-text);background:var(--green-bg)}
+.outcome-btn.sel-inc{border-color:var(--warn-text);color:var(--warn-text);background:var(--warn-bg)}
+.outcome-btn.sel-div{border-color:var(--red-text);color:var(--red-text);background:var(--red-bg)}
+.submit-btn{display:none}
+
+/* Loan box */
+.loan-box{background:var(--surface2);border-radius:var(--radius);padding:13px 15px;margin-top:1rem;border:.5px solid var(--border)}
+.loan-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.loan-btn{padding:9px 10px;border-radius:var(--radius);border:.5px solid var(--border2);background:var(--surface);font-size:11px;color:var(--text);cursor:pointer;text-align:left;font-family:var(--sans)}
+.loan-btn:hover{background:var(--surface3)}
+.loan-amount{font-weight:600;font-size:14px;display:block;margin-bottom:2px;font-family:var(--mono)}
+.loan-rate{color:var(--text3);font-size:10px}
+
+/* Loading overlay */
+.loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:100}
+.loading-mark{width:48px;height:48px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px}
+.loading-text{font-size:13px;color:var(--text2)}
+.loading.hidden{display:none}
+
+/* Public badge */
+.public-notice{background:var(--surface2);border:.5px solid var(--border);border-radius:var(--radius);padding:8px 12px;font-size:11px;color:var(--text3);margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+
+<div class="loading" id="loading">
+  <div class="loading-mark">AA</div>
+  <div class="loading-text">Loading ops data…</div>
+</div>
+
+<div class="site-wrap">
+  <header class="site-header">
+    <div class="logo-group">
+      <div class="logo-mark">AA</div>
+      <div>
+        <div class="logo-title">American Airlines Virtual</div>
+        <div class="logo-sub">Ops Hub — Career Mode · Season 4</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div id="header-date">—</div>
+      <div>Established carrier</div>
+      <button class="auth-btn" id="auth-btn" onclick="toggleAuth()">Ops login</button>
+    </div>
+  </header>
+
+  <div id="public-notice" class="public-notice" style="display:none">
+    <i class="ti ti-eye" aria-hidden="true"></i>
+    Public view — fleet, routes, and log visible. Log in for ops access.
+  </div>
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Cash</div><div class="metric-value green" id="m-cash">—</div></div>
+    <div class="metric"><div class="metric-label">Debt</div><div class="metric-value red" id="m-debt">—</div></div>
+    <div class="metric"><div class="metric-label">Fleet</div><div class="metric-value" id="m-fleet">—</div></div>
+    <div class="metric"><div class="metric-label">Routes</div><div class="metric-value" id="m-routes">—</div></div>
+    <div class="metric"><div class="metric-label">Flights</div><div class="metric-value" id="m-flights">—</div></div>
+    <div class="metric"><div class="metric-label">Pilots</div><div class="metric-value" id="m-pilots">—</div></div>
+  </div>
+
+  <nav class="nav">
+    <button class="nav-btn active" onclick="sw('fleet',this)">Fleet</button>
+    <button class="nav-btn" onclick="sw('routes',this)">Routes</button>
+    <button class="nav-btn ops-only" onclick="sw('finance',this)">Finances</button>
+    <button class="nav-btn ops-only" onclick="sw('staff',this)">Staff</button>
+    <button class="nav-btn ops-only" onclick="sw('dispatch',this)">Dispatch</button>
+    <button class="nav-btn ops-only" onclick="sw('report',this)">Report</button>
+    <button class="nav-btn" onclick="sw('log',this)">Log</button>
+  </nav>
+
+  <!-- FLEET -->
+  <div id="panel-fleet" class="panel active">
+    <div class="panel-title">Your fleet</div>
+    <div id="fleet-list"><div style="color:var(--text3);font-size:13px">Loading fleet…</div></div>
+  </div>
+
+  <!-- ROUTES -->
+  <div id="panel-routes" class="panel">
+    <div class="panel-title">Active routes</div>
+    <div id="routes-list"></div>
+  </div>
+
+  <!-- FINANCES (ops only) -->
+  <div id="panel-finance" class="panel">
+    <div class="panel-title">Financial summary — Season 4</div>
+    <div class="finance-card">
+      <div id="finance-body"></div>
+    </div>
+    <div class="loan-box">
+      <div style="font-size:12px;font-weight:500;color:var(--text)">Take a loan</div>
+      <div class="loan-grid">
+        <button class="loan-btn"><span class="loan-amount">$1,000,000</span><span class="loan-rate">4.5% APR · 12mo</span></button>
+        <button class="loan-btn"><span class="loan-amount">$5,000,000</span><span class="loan-rate">5.9% APR · 36mo</span></button>
+        <button class="loan-btn"><span class="loan-amount">$20,000,000</span><span class="loan-rate">7.2% APR · 60mo</span></button>
+        <button class="loan-btn"><span class="loan-amount">$50,000,000</span><span class="loan-rate">8.5% APR · 120mo</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAFF (ops only) -->
+  <div id="panel-staff" class="panel">
+    <div class="panel-title" id="staff-title">Flight crew</div>
+    <div id="staff-list"></div>
+  </div>
+
+  <!-- DISPATCH (ops only) -->
+  <div id="panel-dispatch" class="panel">
+    <div class="panel-title">Dispatch — OFP import</div>
+    <div class="dispatch-wrap">
+      <div class="hint">Paste your Simbrief OFP below. Each field on its own line in key / value format. I'll parse it, display the full briefing card, and roll a swiss cheese seed before generating the ATC block.</div>
+      <div class="field-group">
+        <label>Simbrief OFP</label>
+        <textarea id="ofp-input" rows="8" placeholder="Airline&#10;AAL&#10;Flight #&#10;1232&#10;Departure&#10;KMIA&#10;..."></textarea>
+      </div>
+      <div class="field-group">
+        <label>Pilot in command</label>
+        <select id="d-pic">
+          <option value="player">You (player)</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="handleDispatch()">Parse OFP &amp; generate ATC block</button>
+      <div class="ofp-card" id="ofp-card"></div>
+      <div class="ofp-route" id="ofp-route"></div>
+      <div class="atc-block" id="atc-block"></div>
+      <button class="copy-btn" id="copy-btn" onclick="copyBlock()"><i class="ti ti-copy" aria-hidden="true"></i> Copy — paste into ATC chat</button>
+    </div>
+  </div>
+
+  <!-- REPORT (ops only) -->
+  <div id="panel-report" class="panel">
+    <div class="panel-title">Report completed flight</div>
+    <div class="dispatch-wrap">
+      <div class="hint">Log your completed flight. Aircraft hours tick automatically and finances update.</div>
+      <div class="field-row">
+        <div><label>Flight number</label><input type="text" id="r-flt" placeholder="e.g. AAL1232"/></div>
+        <div><label>Block time</label><input type="text" id="r-time" placeholder="e.g. 3h00"/></div>
+      </div>
+      <div class="field-group">
+        <label>Aircraft flown</label>
+        <select id="r-ac">
+          <option value="E175">Embraer E175 — N175AA</option>
+          <option value="737-800">Boeing 737-800 — N738AA</option>
+          <option value="A320neo">Airbus A320neo — N320AA</option>
+          <option value="777-300ER">Boeing 777-300ER — N777AA</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <div><label>Origin</label><input type="text" id="r-org" placeholder="KMIA" style="text-transform:uppercase"/></div>
+        <div><label>Destination</label><input type="text" id="r-dst" placeholder="KJFK" style="text-transform:uppercase"/></div>
+      </div>
+      <div class="field-group">
+        <label>Outcome</label>
+        <div class="outcome-row">
+          <button class="outcome-btn" id="ob-ok" onclick="setOutcome('ok')"><i class="ti ti-circle-check" aria-hidden="true"></i> Completed</button>
+          <button class="outcome-btn" id="ob-inc" onclick="setOutcome('inc')"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Incident</button>
+          <button class="outcome-btn" id="ob-div" onclick="setOutcome('div')"><i class="ti ti-arrows-split-2" aria-hidden="true"></i> Diverted</button>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Notes</label>
+        <input type="text" id="r-notes" placeholder="Anything notable from the flight…"/>
+      </div>
+      <button class="btn-primary submit-btn" id="submit-btn" onclick="submitReport()">Submit flight report ↗</button>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div id="panel-log" class="panel">
+    <div class="panel-title" id="log-title">Flight log</div>
+    <div id="log-list"></div>
+  </div>
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/render.js"></script>
+<script src="js/ofp.js"></script>
+<script>
+const SQ_CODES=['2341','3271','4412','1073','2204','3350','4521','1162','2033','3104','5127','6032'];
+let chosenOutcome='';
+let lastATCBlock='';
+
+// ── Boot ───────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', async () => {
+  document.getElementById('header-date').textContent = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  await initSupabase();
+  await loadAll();
+  renderAll();
+  renderDispatchPilots();
+  renderDispatchAircraft();
+  applyAuthState();
+  document.getElementById('loading').classList.add('hidden');
+});
+
+// ── Auth ───────────────────────────────────────────────
+function applyAuthState() {
+  const authed = checkAuth();
+  document.querySelectorAll('.ops-only').forEach(el => {
+    el.classList.toggle('visible', authed);
+  });
+  const btn = document.getElementById('auth-btn');
+  if (authed) {
+    btn.textContent = 'Ops active';
+    btn.classList.add('active');
+    document.getElementById('public-notice').style.display = 'none';
+  } else {
+    btn.textContent = 'Ops login';
+    btn.classList.remove('active');
+    document.getElementById('public-notice').style.display = 'flex';
+  }
+}
+
+function toggleAuth() {
+  if (isAuthenticated) {
+    sessionStorage.removeItem('aa_ops_auth');
+    isAuthenticated = false;
+    applyAuthState();
+    sw('fleet', document.querySelector('.nav-btn'));
+  } else {
+    if (promptAuth()) applyAuthState();
+  }
+}
+
+// ── Tab switching ──────────────────────────────────────
+function sw(tab, btn) {
+  const opsOnly = ['finance','staff','dispatch','report'];
+  if (opsOnly.includes(tab) && !isAuthenticated) {
+    if (!promptAuth()) return;
+    applyAuthState();
+  }
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById('panel-' + tab);
+  if (panel) panel.classList.add('active');
+}
+
+// ── Dispatch ───────────────────────────────────────────
+function handleDispatch() {
+  const raw = document.getElementById('ofp-input').value.trim();
+  if (!raw) { alert('Paste your Simbrief OFP first.'); return; }
+  const pic = document.getElementById('d-pic').value;
+  const parsed = parseOFP(raw);
+  renderOFPCard(parsed);
+  const acType = detectAcType(parsed.ac);
+  const seed = rollEventSeed(pic, acType);
+  const sq = SQ_CODES[Math.floor(Math.random() * SQ_CODES.length)];
+  lastATCBlock = buildATCBlock(parsed, pic, seed, sq);
+  const blockEl = document.getElementById('atc-block');
+  blockEl.textContent = lastATCBlock;
+  blockEl.style.display = 'block';
+  document.getElementById('copy-btn').style.display = 'block';
+}
+
+function detectAcType(acStr) {
+  if (!acStr) return '737-800';
+  if (acStr.includes('738') || acStr.includes('737')) return '737-800';
+  if (acStr.includes('320')) return 'A320neo';
+  if (acStr.includes('777') || acStr.includes('77W')) return '777-300ER';
+  if (acStr.includes('175') || acStr.includes('E17')) return 'E175';
+  if (acStr.includes('789') || acStr.includes('787')) return '777-300ER';
+  return '737-800';
+}
+
+function copyBlock() {
+  navigator.clipboard.writeText(lastATCBlock).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copied — paste into ATC chat';
+    setTimeout(() => { btn.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i> Copy — paste into ATC chat'; }, 2400);
+  });
+}
+
+// ── Report ─────────────────────────────────────────────
+function setOutcome(val) {
+  chosenOutcome = val;
+  ['ok','inc','div'].forEach(v => {
+    const btn = document.getElementById('ob-' + v);
+    btn.className = 'outcome-btn' + (v === val ? ' sel-' + val : '');
+  });
+  document.getElementById('submit-btn').style.display = 'block';
+}
+
+async function submitReport() {
+  const flt = document.getElementById('r-flt').value.trim() || 'AAL???';
+  const time = document.getElementById('r-time').value.trim() || '?h??';
+  const acType = document.getElementById('r-ac').value;
+  const org = (document.getElementById('r-org').value.trim() || '????').toUpperCase();
+  const dst = (document.getElementById('r-dst').value.trim() || '????').toUpperCase();
+  const notes = document.getElementById('r-notes').value.trim();
+  if (!chosenOutcome) { alert('Select an outcome first.'); return; }
+  const statusMap = { ok: 'Completed', inc: 'Incident', div: 'Diverted' };
+  const status = statusMap[chosenOutcome];
+  const routeRev = STATE.routes.find(r => r.origin === org && r.destination === dst);
+  const revenue = status === 'Completed' ? (routeRev?.revenue_per_flight || 0) : 0;
+  const aircraft = STATE.fleet.find(a => a.name.includes(acType) || a.registration.includes(acType));
+  await logFlight({
+    flightNumber: flt, origin: org, destination: dst,
+    aircraftType: acType, registration: aircraft?.registration || '',
+    blockTime: time, status, notes, revenue,
+  });
+  ['r-flt','r-time','r-org','r-dst','r-notes'].forEach(id => { document.getElementById(id).value = ''; });
+  chosenOutcome = '';
+  ['ok','inc','div'].forEach(v => { document.getElementById('ob-'+v).className = 'outcome-btn'; });
+  document.getElementById('submit-btn').style.display = 'none';
+  sw('log', document.querySelector('.nav-btn[onclick*="log"]'));
+}
+
+// ── Render helpers ─────────────────────────────────────
+function renderDispatchPilots() {
+  const sel = document.getElementById('d-pic');
+  if (!sel) return;
+  const extra = STATE.pilots.map(p => `<option value="${p.initials}">${p.name} — ${p.role}</option>`).join('');
+  sel.innerHTML = '<option value="player">You (player)</option>' + extra;
+}
+
+function renderDispatchAircraft() {}
+</script>
+</body>
+</html>
