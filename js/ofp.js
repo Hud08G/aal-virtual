@@ -27,8 +27,9 @@ function parseOFP(raw) {
   const sorted = [...OFP_KEYS].sort((a,b) => b.length - a.length);
   let normalized = raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
   for (const key of sorted) {
-    const re = new RegExp('(?<!\n)(' + key.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&') + ')', 'g');
-    normalized = normalized.replace(re, '\n$1');
+    const escaped = key.replace(/[-\/\\^$*+?.()|[\]{}]/g,'\\$&');
+    const re = new RegExp('([^\n])(' + escaped + ')', 'g');
+    normalized = normalized.replace(re, '$1\n$2');
   }
 
   // Step 2: split into lines and parse key→value pairs
