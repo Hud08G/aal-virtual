@@ -1,122 +1,148 @@
 // aa-virtual/public/js/ofp.js
-// Simbrief OFP parser — handles Simbrief's label-per-line / value-per-line format
+// Simbrief OFP parser — handles both raw single-line and nicely spaced formats
+
+const OFP_KEYS = [
+  'Flight Number', 'Callsign', 'Departure', 'Arrival', 'Alternate',
+  'Aircraft', 'Departure Date', 'Departure Time', 'Arrival Time',
+  'Air Time', 'Block Time', 'Airframe',
+  'Initial Altitude', 'Cruise Profile', 'Route Distance',
+  'Average Wind', 'Wind Component', 'ISA Deviation',
+  'Release Number', 'AIRAC Cycle', 'OFP Layout', 'Units', 'Navlog', 'ETOPS',
+  'Enroute Burn', 'Passenger Count', 'Empty Weight',
+  'Estimated ZFW', 'Estimated TOW', 'Estimated LW',
+  'Block Fuel', 'Baggage', 'Payload',
+  'Max ZFW', 'Max TOW', 'Max LW',
+  'Route', 'Flight Plan Summary', 'Load Sheet- All weights in LBS',
+  'Load Sheet- All weights in KGS',
+];
 
 function parseOFP(raw) {
+  // Detect format: if raw has multiple newlines it's spaced, otherwise single-line
+  const lineCount = (raw.match(/\n/g) || []).length;
+  const map = lineCount > 5 ? parseSpaced(raw) : parseSingleLine(raw);
+  return buildParsed(map);
+}
+
+// Spaced format: label on one line, value on next
+function parseSpaced(raw) {
   const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
-
-  // Build a key-value map — every odd line is a label, every even line is its value
-  // But we need to be smart: some lines are pure section headers with no value
-  const SECTION_HEADERS = [
-    'flight plan summary', 'load sheet- all weights in lbs',
-    'load sheet- all weights in kgs', 'load sheet', 'flight plan',
-  ];
-
+  const SKIP = ['flight plan summary', 'load sheet- all weights in lbs', 'load sheet- all weights in kgs'];
   const map = {};
   let i = 0;
   while (i < lines.length) {
     const line = lines[i];
     const lower = line.toLowerCase();
-    // Skip section headers
-    if (SECTION_HEADERS.some(h => lower.includes(h))) { i++; continue; }
-    // If next line exists and doesn't look like a label (labels are short, title-case-ish)
+    if (SKIP.some(s => lower.includes(s))) { i++; continue; }
     const next = lines[i + 1];
-    if (next !== undefined) {
-      // Heuristic: if the current line looks like a label (no digits, no slashes, not too long)
-      // and the next line looks like a value
-      const looksLikeLabel = line.length < 40 && !line.match(/^\d/) && !line.match(/^[A-Z]{4}\//);
-      const nextLooksLikeValue = next.length > 0;
-      if (looksLikeLabel && nextLooksLikeValue) {
-        map[lower] = next.trim();
-        i += 2;
-        continue;
-      }
-    }
-    i++;
+    if (next && line.length < 50 && !line.match(/^[A-Z]{4}\//)) {
+      map[lower] = next.trim();
+      i += 2;
+    } else { i++; }
   }
+  return map;
+}
 
+// Single-line format: all text jammed together, use known keys as delimiters
+function parseSingleLine(raw) {
+  const map = {};
+  // Sort keys longest first so we match "Departure Date" before "Departure"
+  const sorted = [...OFP_KEYS].sort((a, b) => b.length - a.length);
+  // Build regex that splits on any known key
+  const escaped = sorted.map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+  const splitter = new RegExp('(' + escaped.join('|') + ')', 'g');
+  const parts = raw.split(splitter).filter(Boolean);
+
+  let currentKey = null;
+  for (const part of parts) {
+    if (OFP_KEYS.some(k => k.toLowerCase() === part.toLowerCase())) {
+      currentKey = part.toLowerCase();
+    } else if (currentKey) {
+      const val = part.trim();
+      if (val && !map[currentKey]) map[currentKey] = val;
+      currentKey = null;
+    }
+  }
+  return map;
+}
+
+function buildParsed(map) {
   function get(...keys) {
     for (const k of keys) {
-      if (map[k.toLowerCase()]) return map[k.toLowerCase()];
+      const v = map[k.toLowerCase()];
+      if (v) return v.trim();
     }
     return '';
   }
 
-  // Parse route — find the line after "Route" label
-  let route = get('route');
-  // Clean up route — remove runway designators at start/end
-  if (route) {
-    route = route.replace(/^[A-Z]{4}\/\d{2}[LRC]?\s*/, '').replace(/\s*[A-Z]{4}\/\d{2}[LRC]?$/, '').trim();
-  }
-
-  // Parse ICAO codes from Departure/Arrival fields e.g. "KMIA / MIA" or "KMIA/MIA"
   function extractICAO(str) {
     if (!str) return '';
     const m = str.match(/([A-Z]{4})/);
-    return m ? m[1] : str.split('/')[0].trim();
+    return m ? m[1] : '';
+  }
+
+  function parseFL(altStr) {
+    if (!altStr) return '';
+    const m = altStr.replace(/,/g, '').match(/(\d+)/);
+    if (!m) return '';
+    return 'FL' + Math.round(parseInt(m[1]) / 100);
+  }
+
+  function parseTime(str) {
+    if (!str) return '';
+    return str.replace(' UTC', '').replace(':', '').substring(0, 4);
   }
 
   const depRaw = get('departure');
   const arrRaw = get('arrival');
   const altRaw = get('alternate');
+  const callsign = get('callsign', 'flight number');
+  const airline = callsign ? callsign.replace(/\d+/g, '') : 'AAL';
 
-  const depIcao = extractICAO(depRaw);
-  const arrIcao = extractICAO(arrRaw);
-  const altIcao = extractICAO(altRaw);
-
-  // Parse altitude — "35,000 ft" → "FL350"
-  const altRaw2 = get('initial altitude', 'altitude', 'crz alt');
-  let fl = '';
-  if (altRaw2) {
-    const m = altRaw2.replace(/,/g, '').match(/(\d+)/);
-    if (m) fl = 'FL' + Math.round(parseInt(m[1]) / 100);
+  // Route — strip runway designators from start/end
+  let route = get('route');
+  if (route) {
+    route = route
+      .replace(/^[A-Z]{4}\/\d{2}[LRC]?\s+/, '')
+      .replace(/\s+[A-Z]{4}\/\d{2}[LRC]?$/, '')
+      .trim();
   }
 
-  // Flight number — try a few label variants
-  const callsign = get('callsign', 'flight number', 'flight #');
-  const fltNum = get('flight number', 'flight #', 'callsign');
-
-  // Aircraft
-  const ac = get('aircraft', 'aircraft type');
-
-  // Times
-  const depTime = get('departure time').replace(' UTC', '').replace(':', '').substring(0, 4);
-  const arrTime = get('arrival time').replace(' UTC', '').replace(':', '').substring(0, 4);
-  const airTime = get('air time');
-  const blkTime = get('block time');
-
-  // Load sheet
-  const pax = get('passenger count', 'passengers');
-  const fuel = get('block fuel', 'fuel');
-  const burn = get('enroute burn', 'burn');
-  const payload = get('payload');
-  const baggage = get('baggage');
-  const oew = get('empty weight', 'oew');
-  const ezfw = get('estimated zfw', 'ezfw');
-  const etow = get('estimated tow', 'etow');
-  const elw = get('estimated lw', 'elw');
-  const mzfw = get('max zfw', 'mzfw');
-  const mtow = get('max tow', 'mtow');
-  const mlw = get('max lw', 'mlw');
-
-  // Performance
-  const dist = get('route distance', 'distance');
-  const wind = get('average wind', 'wind');
-  const comp = get('wind component', 'comp');
-  const cruise = get('cruise profile', 'cruise', 'ci');
-  const isa = get('isa deviation', 'isa dev');
-  const units = get('units');
-  const airframe = get('airframe');
-  const date = get('departure date', 'date');
-  const airline = callsign ? callsign.replace(/\d+/, '') : 'AAL';
+  const depTime = parseTime(get('departure time'));
+  const arrTime = parseTime(get('arrival time'));
 
   return {
-    airline, callsign, fltNum,
-    depIcao, arrIcao, altIcao,
-    ac, airframe, date,
-    depTime, arrTime, airTime, blkTime,
-    fl, dist, wind, comp, cruise, isa, units,
-    pax, fuel, burn, payload, baggage,
-    oew, ezfw, etow, elw, mzfw, mtow, mlw,
+    airline,
+    callsign,
+    fltNum: get('flight number', 'callsign'),
+    depIcao: extractICAO(depRaw),
+    arrIcao: extractICAO(arrRaw),
+    altIcao: extractICAO(altRaw),
+    ac: get('aircraft'),
+    airframe: get('airframe'),
+    date: get('departure date'),
+    depTime,
+    arrTime,
+    airTime: get('air time'),
+    blkTime: get('block time'),
+    fl: parseFL(get('initial altitude', 'altitude')),
+    dist: get('route distance', 'distance'),
+    wind: get('average wind', 'wind'),
+    comp: get('wind component'),
+    cruise: get('cruise profile', 'cruise'),
+    isa: get('isa deviation'),
+    units: get('units'),
+    pax: get('passenger count', 'passengers'),
+    fuel: get('block fuel', 'fuel'),
+    burn: get('enroute burn', 'burn'),
+    payload: get('payload'),
+    baggage: get('baggage'),
+    oew: get('empty weight'),
+    ezfw: get('estimated zfw'),
+    etow: get('estimated tow'),
+    elw: get('estimated lw'),
+    mzfw: get('max zfw'),
+    mtow: get('max tow'),
+    mlw: get('max lw'),
     route,
   };
 }
@@ -124,10 +150,9 @@ function parseOFP(raw) {
 function renderOFPCard(p) {
   const card = document.getElementById('ofp-card');
   if (!card) return;
-
   const u = (p.units || 'LBS').toUpperCase() === 'KGS' ? 'kg' : 'lbs';
 
-  function fmtWeight(val) {
+  function fmtW(val) {
     if (!val) return '';
     const n = parseInt(val.replace(/[^0-9]/g, ''));
     return isNaN(n) ? val : n.toLocaleString() + ' ' + u;
@@ -144,8 +169,8 @@ function renderOFPCard(p) {
       ['Date', p.date],
     ]},
     { title: 'Times', rows: [
-      ['STD', p.depTime ? p.depTime.slice(0,2) + ':' + p.depTime.slice(2) + 'Z' : ''],
-      ['STA', p.arrTime ? p.arrTime.slice(0,2) + ':' + p.arrTime.slice(2) + 'Z' : ''],
+      ['STD', p.depTime ? p.depTime.slice(0,2)+':'+p.depTime.slice(2)+'Z' : ''],
+      ['STA', p.arrTime ? p.arrTime.slice(0,2)+':'+p.arrTime.slice(2)+'Z' : ''],
       ['Air time', p.airTime],
       ['Block time', p.blkTime],
     ]},
@@ -159,16 +184,16 @@ function renderOFPCard(p) {
     ]},
     { title: 'Load sheet — all weights in ' + u, rows: [
       ['Passengers', p.pax],
-      ['Payload', fmtWeight(p.payload)],
-      ['Baggage', fmtWeight(p.baggage)],
-      ['Enroute burn', fmtWeight(p.burn)],
-      ['Block fuel', fmtWeight(p.fuel)],
-      ['Est. ZFW', fmtWeight(p.ezfw)],
-      ['Est. TOW', fmtWeight(p.etow)],
-      ['Est. LW', fmtWeight(p.elw)],
-      ['Max ZFW', fmtWeight(p.mzfw)],
-      ['Max TOW', fmtWeight(p.mtow)],
-      ['Max LW', fmtWeight(p.mlw)],
+      ['Payload', fmtW(p.payload)],
+      ['Baggage', fmtW(p.baggage)],
+      ['Enroute burn', fmtW(p.burn)],
+      ['Block fuel', fmtW(p.fuel)],
+      ['Est. ZFW', fmtW(p.ezfw)],
+      ['Est. TOW', fmtW(p.etow)],
+      ['Est. LW', fmtW(p.elw)],
+      ['Max ZFW', fmtW(p.mzfw)],
+      ['Max TOW', fmtW(p.mtow)],
+      ['Max LW', fmtW(p.mlw)],
     ]},
   ];
 
@@ -189,7 +214,9 @@ function renderOFPCard(p) {
 
 function buildATCBlock(parsed, picKey, seed, sq) {
   const pic = picKey === 'player' ? 'Player (you)' : picKey;
-  const etd = parsed.depTime ? parsed.depTime.slice(0,2) + ':' + parsed.depTime.slice(2) + 'Z' : '????Z';
+  const etd = parsed.depTime
+    ? parsed.depTime.slice(0,2) + ':' + parsed.depTime.slice(2) + 'Z'
+    : '????Z';
   return [
     `${parsed.callsign || 'AAL???'} | ${parsed.ac || '????'} (${parsed.airframe || '????'}) | ${parsed.depIcao || '????'} → ${parsed.arrIcao || '????'}`,
     `SQ: ${sq} | CRZ: ${parsed.fl || 'FL350'} | Route: ${parsed.route || '[see OFP]'}`,
