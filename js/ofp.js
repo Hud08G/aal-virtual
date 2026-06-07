@@ -33,25 +33,31 @@ function parseOFP(raw) {
   }
 
   // Step 2: split into lines and parse key→value pairs
+  // Each line is either "Key value" (same line) or just "Key" with value on next line
   const lines = normalized.split('\n').map(l => l.trim()).filter(Boolean);
   const map = {};
   let i = 0;
   while (i < lines.length) {
     const line = lines[i];
-    const lower = line.toLowerCase();
-    // Check if this line IS a known key
-    const matchedKey = OFP_KEYS.find(k => k.toLowerCase() === lower);
+    // Try to match a known key at the START of this line
+    const matchedKey = [...OFP_KEYS].sort((a,b)=>b.length-a.length).find(k => line.toLowerCase().startsWith(k.toLowerCase()));
     if (matchedKey) {
+      const lower = matchedKey.toLowerCase();
       if (!SKIP_KEYS.includes(lower)) {
-        // Value is everything on the next line
-        const next = lines[i+1];
-        if (next) {
-          // Make sure next line isn't itself a key
-          const nextIsKey = OFP_KEYS.some(k => k.toLowerCase() === next.toLowerCase());
-          if (!nextIsKey) {
-            map[lower] = next.trim();
-            i += 2;
-            continue;
+        // Value is everything after the key on the same line
+        const inlineVal = line.slice(matchedKey.length).trim();
+        if (inlineVal) {
+          map[lower] = inlineVal;
+        } else {
+          // Value is on the next line
+          const next = lines[i+1];
+          if (next) {
+            const nextIsKey = OFP_KEYS.some(k => next.toLowerCase().startsWith(k.toLowerCase()));
+            if (!nextIsKey) {
+              map[lower] = next.trim();
+              i += 2;
+              continue;
+            }
           }
         }
       }
