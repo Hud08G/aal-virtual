@@ -68,7 +68,7 @@ async function logFlight({ flightNumber, origin, destination, aircraftType, regi
     await sb.from('fleet').update({ hours_logged: newHours }).eq('id', aircraft.id);
 
     // Check 787 unlock
-    if (aircraftType === '777-300ER' && newHours >= 200) {
+    if (aircraftType === '777-300ER' && newHours >= 40) {
       await sb.from('fleet').update({ locked: false }).eq('registration', 'N789AA');
     }
 
@@ -156,7 +156,7 @@ function fmtHours(h) {
 
 // ── Auth (ops panel lock) ──────────────────────────────
 let isAuthenticated = false;
-const OPS_PASSWORD = 'Judejpg123'; // change this
+const OPS_PASSWORD = 'YOUR_OPS_PASSWORD'; // change this
 
 function checkAuth() {
   const stored = sessionStorage.getItem('aa_ops_auth');
