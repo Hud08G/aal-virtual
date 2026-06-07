@@ -156,7 +156,7 @@ function fmtHours(h) {
 
 // ── Auth (ops panel lock) ──────────────────────────────
 let isAuthenticated = false;
-const OPS_PASSWORD = 'Judejpg123!'; // change this
+const OPS_PASSWORD = 'Judejpg123'; // change this
 
 function checkAuth() {
   const stored = sessionStorage.getItem('aa_ops_auth');
