@@ -73,6 +73,9 @@ function renderRoutes() {
 
 function routeCard(r) {
   const dur = r.duration_min ? (Math.floor(r.duration_min / 60) + 'h' + (r.duration_min % 60 ? (r.duration_min % 60) + 'min' : '')) : '';
+  const ticketDisplay = r.ticket_price_low && r.ticket_price_high
+    ? '$' + r.ticket_price_low + ' – $' + r.ticket_price_high
+    : fmt$(r.revenue_per_flight);
   return `
     <div class="card route-card">
       <div>
@@ -80,7 +83,7 @@ function routeCard(r) {
         <div class="card-sub">${[r.distance_nm ? r.distance_nm + 'nm' : '', r.aircraft_type, dur].filter(Boolean).join(' · ')}</div>
       </div>
       <div style="text-align:right">
-        <div class="revenue">${fmt$(r.revenue_per_flight)}/flt</div>
+        <div class="revenue">${ticketDisplay}</div>
         <span class="badge badge-success" style="margin-top:3px;display:inline-block">${r.status}</span>
       </div>
     </div>`;
