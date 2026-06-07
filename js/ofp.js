@@ -48,10 +48,10 @@ function parseOFP(raw) {
     route = route.replace(/^[A-Z]{4}\/\d{2}[LRC]?\s*/, '').replace(/\s*[A-Z]{4}\/\d{2}[LRC]?$/, '').trim();
   }
 
-  // Parse ICAO codes from Departure/Arrival fields e.g. "KMIA / MIA"
+  // Parse ICAO codes from Departure/Arrival fields e.g. "KMIA / MIA" or "KMIA/MIA"
   function extractICAO(str) {
     if (!str) return '';
-    const m = str.match(/^([A-Z]{4})/);
+    const m = str.match(/([A-Z]{4})/);
     return m ? m[1] : str.split('/')[0].trim();
   }
 
